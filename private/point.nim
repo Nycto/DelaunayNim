@@ -4,14 +4,13 @@
 
 # A type interface for dealing with points
 type
-    Point = generic p
-        p.x is integer
-        p.y is integer
+    Point* = generic p
+        p.x is int or float
+        p.y is int or float
 
-# A phantom type that guaranatees its contents are unique and sorted
-type UniqSortedPoints = distinct seq[Point]
 
-# Given a list of points, sorts and dedupes them
-proc uniqSorted* ( points: seq[Point] ): UniqSortedPoints =
-    discard
+# Creates a point
+proc pnt*[T: int or float] ( x, y: T ): tuple[x, y: T] =
+    result = (x, y)
+
 
