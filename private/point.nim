@@ -5,12 +5,12 @@
 # A type interface for dealing with points
 type
     Point* = generic p
-        p.x is int or float
-        p.y is int or float
+        p.x is float
+        p.y is float
 
 
 # Creates a point
-proc pnt*[T: int or float] ( x, y: T ): tuple[x, y: T] =
+proc pnt*( x, y: float ): tuple[x, y: float] =
     result = (x, y)
 
 
