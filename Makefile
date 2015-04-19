@@ -41,7 +41,7 @@ watch:
 	$(eval MAKEFLAGS += " -s ")
 	@while true; do \
 		make test TESTS="$(TESTS)"; \
-		inotifywait -qre close_write . > /dev/null; \
+		inotifywait -qre close_write `find . -name "*.nim"` > /dev/null; \
 		echo "Change detected, re-running..."; \
 	done
 
