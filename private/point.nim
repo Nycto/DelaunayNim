@@ -5,26 +5,32 @@
 import algorithm
 import sets
 
+#
+# Points represent simple x,y coordinates. The goal is to allow library
+# consumers to use their own objects as points, hence implement them as
+# generic type classes
+#
 
-# A type interface for dealing with points
-type
-    Point* = generic p
-        p.x is float
-        p.y is float
+type Point* = generic p
+    ## A type interface for dealing with points
+    p.x is float
+    p.y is float
 
-
-# Creates a point
 proc pnt*( x, y: float ): tuple[x, y: float] =
+    ## Creates a point
     result = (x, y)
 
 
-# A list of sorted, unique points
-type
-    PointList*[T] = distinct seq[T]
+#
+# PointList is a phantom type that guarantees a list of points is unique and
+# in sorted order
+#
 
+type PointList*[T] = distinct seq[T]
+    ## A list of sorted, unique points
 
-# Creates a point list from a list of points
 proc newPointList*[T: Point]( list: openArray[T] ): PointList[T] =
+    ## Creates a point list from a list of points
 
     var output: seq[T] = @[]
 
@@ -50,9 +56,10 @@ proc newPointList*[T: Point]( list: openArray[T] ): PointList[T] =
 
     result = PointList(output)
 
+proc `@`*[T]( points: PointList[T] ): seq[T] =
+    ## Convert a Point list back to a sequence
+    seq[T](points)
 
-# Convert a Point list back to a sequence
-proc `@`*[T]( points: PointList[T] ): seq[T] = seq[T](points)
 
 
 
