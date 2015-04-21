@@ -7,10 +7,6 @@
 TESTS ?= $(notdir $(basename $(wildcard test/*_test.nim)))
 
 
-# Build across all cores by default
-MAKEFLAGS += " -j $(shell nproc) "
-
-
 # Run all tests
 .PHONY: test
 test: $(TESTS)
