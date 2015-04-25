@@ -14,8 +14,12 @@ test: $(TESTS)
 
 # A template for defining targets for a test
 define DEFINE_TEST
-.PHONY: $1
-$1:
+
+private/$(patsubst %_test,%,$1).nim:
+
+test/$1.nim:
+
+build/$1: test/$1.nim private/$(patsubst %_test,%,$1).nim
 	@echo "$1 ... "
 	$$(shell mkdir -p build/tmp)
 	$$(eval LOG := $$(shell mktemp --tmpdir=build/tmp --suffix=.$1))
@@ -25,6 +29,9 @@ $1:
 		test/$1.nim 2>&1 > $$(LOG) || (cat $$(LOG) && exit 1);
 	@build/$1
 	@rm $$(LOG)
+
+.PHONY: $1
+$1: build/$1
 endef
 
 # Define a target for each test
