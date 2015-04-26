@@ -23,7 +23,7 @@ build/$1: test/$1.nim private/$(patsubst %_test,%,$1).nim
 	@echo "$1 ... "
 	$$(shell mkdir -p build/tmp)
 	$$(eval LOG := $$(shell mktemp --tmpdir=build/tmp --suffix=.$1))
-	@nim c \
+	@nimble c \
 		--path:. --nimcache:../build/nimcache \
 		--out:../build/$1 \
 		test/$1.nim 2>&1 > $$(LOG) || (cat $$(LOG) && exit 1);
