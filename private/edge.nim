@@ -7,6 +7,9 @@ import point, tables, sets, optional_t
 type EdgeGroup*[T] = object ## \
     ## A group of edges
 
+    # A map of points to the points they are connected to
+    connections: Table[T, HashSet[T]]
+
     # Tracks the bottom-left point in this group of edges
     lowerLeft: Option[T]
 
@@ -21,6 +24,7 @@ type EmptyGroupError* = object of Exception ## \
 proc newEdgeGroup*[T: Point](): EdgeGroup[T] =
     ## Creates a new, empty edge group
     result = EdgeGroup[T](
+        connections: initTable[T, HashSet[T]](),
         lowerLeft: None[T](),
         lowerRight: None[T]()
     )
@@ -41,11 +45,21 @@ proc potentialBottom[T]( group: var EdgeGroup[T], point: T ) =
         if point.x > group.lowerRight.get.x:
             group.lowerRight = Some(point)
 
+proc connect[T]( group: var EdgeGroup[T], base, other: T ) =
+    ## Adds a point and its connection to his group
+
+    if group.connections.hasKey(base):
+        group.connections.mget(base).incl(other)
+    else:
+        group.connections.add(base, toSet([ other ]))
+
 
 proc add*[T] ( group: var EdgeGroup[T], one, two: T ) =
     ## Adds an edge to this group
     group.potentialBottom( one )
     group.potentialBottom( two )
+    group.connect( one, two )
+    group.connect( two, one )
 
 proc bottomRight*[T]( group: EdgeGroup[T] ): T =
     ## Returns the bottom right point in this edge group
@@ -58,4 +72,16 @@ proc bottomLeft*[T]( group: EdgeGroup[T] ): T =
     if isNone group.lowerLeft:
         raise newException(EmptyGroupError, "EdgeGroup is empty")
     return group.lowerLeft.get
+
+
+iterator edges*[T]( group: EdgeGroup[T] ): tuple[a, b: T] =
+    ## Iterates over all the edges in a group
+
+    var seen = initSet[T]()
+    for key in group.connections.keys:
+        seen.incl(key)
+        for point in `[]`(group.connections, key).items:
+            if not seen.contains(point):
+                yield (a: key, b: point)
+
 
