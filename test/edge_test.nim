@@ -46,3 +46,20 @@ suite "Edge Groups should ":
             (a: pnt(4, 5), b: pnt(2, 2) )
         ])
 
+    test "Allow edges to be removed":
+        var group = newEdgeGroup[tuple[x, y: float]]()
+
+        group.add( pnt(1, 1), pnt(4, 5) )
+        group.add( pnt(1, 1), pnt(2, 2) )
+        group.add( pnt(4, 5), pnt(2, 2) )
+        group.remove( pnt(1, 1), pnt(2, 2) )
+
+        let edges = toSeq(group.edges)
+
+        # This is kind of a crappy test in that it depends on potentially
+        # non-deterministic sorting within Maps and Sets, but its enough for now
+        require( edges == @[
+            (a: pnt(1, 1), b: pnt(4, 5) ),
+            (a: pnt(4, 5), b: pnt(2, 2) )
+        ])
+

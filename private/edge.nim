@@ -2,7 +2,7 @@
 # Edges
 #
 
-import point, tables, sets, optional_t
+import point, anglesort, tables, sets, optional_t
 
 type EdgeGroup*[T] = object ## \
     ## A group of edges
@@ -61,6 +61,15 @@ proc add*[T] ( group: var EdgeGroup[T], one, two: T ) =
     group.connect( one, two )
     group.connect( two, one )
 
+proc remove*[T] ( group: var EdgeGroup[T], one, two: T ) =
+    ## Removes an edge from this group. Note that the two points are still
+    ## considered as part of this EdgeGroup when considering the bottom left
+    ## and bottom right points
+    if group.connections.hasKey(one):
+        group.connections.mget(one).excl(two)
+    if group.connections.hasKey(two):
+        group.connections.mget(two).excl(one)
+
 proc bottomRight*[T]( group: EdgeGroup[T] ): T =
     ## Returns the bottom right point in this edge group
     if isNone group.lowerRight:
@@ -83,5 +92,6 @@ iterator edges*[T]( group: EdgeGroup[T] ): tuple[a, b: T] =
         for point in `[]`(group.connections, key).items:
             if not seen.contains(point):
                 yield (a: key, b: point)
+
 
 
