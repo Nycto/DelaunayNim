@@ -47,7 +47,7 @@ proc cmpDistance[T]( base, a, b: T ): int =
 type Direction* = enum ## A rotation direction
     clockwise, counterclockwise
 
-proc angleSort*[T: Point](
+proc sort*[T: Point](
     points: openArray[T], direction: Direction,
     center: T, reference: T
 ): seq[T] =
