@@ -2,7 +2,7 @@
 # Edges
 #
 
-import point, anglesort, tables, sets, optional_t
+import point, tables, sets, optional_t, anglesort, sequtils
 
 type EdgeGroup*[T] = object ## \
     ## A group of edges
@@ -93,5 +93,23 @@ iterator edges*[T]( group: EdgeGroup[T] ): tuple[a, b: T] =
             if not seen.contains(point):
                 yield (a: key, b: point)
 
+
+type MissingPointError* = object of Exception ## \
+    ## Thrown when trying to read connections of a point that isn't in a group
+
+proc connected*[T: Point](
+    group: EdgeGroup[T], point: T, sortVersus: T, direction: Direction
+): seq[T] =
+    ## Iterates over the points connected to another point, sorted
+    ## relative to `sortVersus`
+    if not group.connections.hasKey(point):
+        raise newException(MissingPointError, "Point is in group: " & $point)
+
+    # FIXME: This copies the list of points into a sequence, just so that we
+    # can iterate over them. It would be nice to just iterate over them
+    # directly.
+    let points = toSeq( items( `[]`(group.connections, point) ) )
+
+    return sort( points, direction, point, sortVersus )
 
 

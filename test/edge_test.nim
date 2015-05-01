@@ -1,6 +1,7 @@
 import unittest, sequtils
 import private/edge
 import private/point
+import private/anglesort
 
 suite "Edge Groups should ":
 
@@ -62,4 +63,17 @@ suite "Edge Groups should ":
             (a: pnt(1, 1), b: pnt(4, 5) ),
             (a: pnt(4, 5), b: pnt(2, 2) )
         ])
+
+    test "Iterate over connected points":
+
+        var group = newEdgeGroup[tuple[x, y: float]]()
+        group.add( pnt(1, 1), pnt(4, 5) )
+        group.add( pnt(1, 1), pnt(2, 2) )
+        group.add( pnt(4, 5), pnt(2, 2) )
+        group.add( pnt(4, 5), pnt(6, 6) )
+
+        let connections =
+            group.connected(pnt(1, 1), pnt(5, 0), counterclockwise)
+
+        require( connections == @[ pnt(2, 2), pnt(4, 5) ] )
 
