@@ -110,7 +110,9 @@ iterator connected*[T: Point](
     # directly.
     let points = toSeq( items( `[]`(group.connections, point) ) )
 
-    for point in sort( points, direction, point, sortVersus ):
+    let sorted = sort( points, direction, point, sortVersus )
+
+    for point in sorted():
         yield point
 
 
