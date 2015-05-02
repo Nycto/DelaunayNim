@@ -19,7 +19,7 @@ private/$(patsubst %_test,%,$1).nim:
 
 test/$1.nim:
 
-build/$1: test/$1.nim private/$(patsubst %_test,%,$1).nim
+build/$1: test/$1.nim private/$(patsubst %_test,%,$1).nim test/helpers.nim
 	@echo "$1 ... "
 	$$(shell mkdir -p build/tmp)
 	$$(eval LOG := $$(shell mktemp --tmpdir=build/tmp --suffix=.$1))

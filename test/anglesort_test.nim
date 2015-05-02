@@ -1,4 +1,4 @@
-import unittest
+import unittest, helpers
 import private/anglesort
 import private/point
 import algorithm
@@ -10,13 +10,13 @@ suite "AngleSort should ":
         let iter = [ pnt(3, 10), pnt(3, 5), pnt(8, 4), pnt(1, 2) ]
             .sort( clockwise, pnt(4, 0), pnt(1, 1) )
 
-        require(iter == @[ pnt(1, 2), pnt(3, 5), pnt(3, 10), pnt(8, 4) ])
+        require( iter == [ pnt(1, 2), pnt(3, 5), pnt(3, 10), pnt(8, 4) ] )
 
     test "Sort points in counter clockwise order":
         let iter = [  pnt(1, 2), pnt(0, 1), pnt(2, 1) ]
             .sort( counterclockwise, pnt(1, 0), pnt(5, 1) )
 
-        require( iter == @[ pnt(2, 1), pnt(1, 2), pnt(0, 1) ] )
+        require( iter == [ pnt(2, 1), pnt(1, 2), pnt(0, 1) ] )
 
 
     test "Sort by distance when the angle is the same":
@@ -24,7 +24,7 @@ suite "AngleSort should ":
             [ pnt(1, 2), pnt(1, 1), pnt(2, 2), pnt(1, 1), pnt(2, 1), pnt(3, 3) ]
                 .sort( counterclockwise, pnt(0, 0), pnt(5, 1) )
 
-        require( iter == @[
+        require( iter == [
             pnt(2, 1), pnt(1, 1), pnt(1, 1), pnt(2, 2), pnt(3, 3), pnt(1, 2)
         ] )
 
@@ -35,13 +35,13 @@ suite "AngleSort should ":
             let iter = [ pnt(1, 1), pnt(5, 0) ]
                 .sort( clockwise, pnt(0, 0), pnt(4, 4) )
 
-            require( iter == @[ pnt(1, 1), pnt(5, 0) ] )
+            require( iter == [ pnt(1, 1), pnt(5, 0) ] )
 
         test "CounterClockwise":
             let iter = [ pnt(1, 1), pnt(0, 5) ]
                 .sort( counterclockwise, pnt(0, 0), pnt(4, 4) )
 
-            require( iter == @[ pnt(1, 1), pnt(0, 5) ] )
+            require( iter == [ pnt(1, 1), pnt(0, 5) ] )
 
     test "Remove points greater than 180 degrees":
 
