@@ -97,9 +97,9 @@ iterator edges*[T]( group: EdgeGroup[T] ): tuple[a, b: T] =
 type MissingPointError* = object of Exception ## \
     ## Thrown when trying to read connections of a point that isn't in a group
 
-proc connected*[T: Point](
+iterator connected*[T: Point](
     group: EdgeGroup[T], point: T, sortVersus: T, direction: Direction
-): seq[T] =
+): T =
     ## Iterates over the points connected to another point, sorted
     ## relative to `sortVersus`
     if not group.connections.hasKey(point):
@@ -110,6 +110,7 @@ proc connected*[T: Point](
     # directly.
     let points = toSeq( items( `[]`(group.connections, point) ) )
 
-    return sort( points, direction, point, sortVersus )
+    for point in sort( points, direction, point, sortVersus ):
+        yield point
 
 
