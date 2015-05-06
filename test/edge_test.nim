@@ -3,6 +3,14 @@ import private/edge
 import private/point
 import private/anglesort
 
+proc `==`[T]( actual: EdgeGroup[T], expected: seq[tuple[a, b: T]] ): bool =
+    let edges = toSeq(actual.edges)
+
+    # This is kind of a crappy test in that it depends on potentially
+    # non-deterministic sorting within Maps and Sets, but its enough for now
+    system.`==`(edges, expected)
+
+
 suite "Edge Groups should ":
 
     test "Track bottom left and right":
@@ -37,11 +45,7 @@ suite "Edge Groups should ":
         group.add( pnt(1, 1), pnt(2, 2) )
         group.add( pnt(4, 5), pnt(2, 2) )
 
-        let edges = toSeq(group.edges)
-
-        # This is kind of a crappy test in that it depends on potentially
-        # non-deterministic sorting within Maps and Sets, but its enough for now
-        require( edges == @[
+        require(group == @[
             (a: pnt(1, 1), b: pnt(4, 5) ),
             (a: pnt(1, 1), b: pnt(2, 2) ),
             (a: pnt(4, 5), b: pnt(2, 2) )
@@ -55,11 +59,7 @@ suite "Edge Groups should ":
         group.add( pnt(4, 5), pnt(2, 2) )
         group.remove( pnt(1, 1), pnt(2, 2) )
 
-        let edges = toSeq(group.edges)
-
-        # This is kind of a crappy test in that it depends on potentially
-        # non-deterministic sorting within Maps and Sets, but its enough for now
-        require( edges == @[
+        require(group == @[
             (a: pnt(1, 1), b: pnt(4, 5) ),
             (a: pnt(4, 5), b: pnt(2, 2) )
         ])
@@ -76,4 +76,26 @@ suite "Edge Groups should ":
             group.connected(pnt(1, 1), pnt(5, 0), counterclockwise) )
 
         require( connections == @[ pnt(2, 2), pnt(4, 5) ] )
+
+    test "Add edge groups together":
+
+        var one = newEdgeGroup[tuple[x, y: float]]()
+        one.add( pnt(1, 1), pnt(4, 5) )
+        one.add( pnt(1, 1), pnt(2, 2) )
+        one.add( pnt(4, 5), pnt(2, 2) )
+
+        var two = newEdgeGroup[tuple[x, y: float]]()
+        two.add( pnt(1, 1), pnt(6, 3) )
+        two.add( pnt(6, 3), pnt(8, 8) )
+
+        one.add(two)
+
+        require( one == @[
+            (a: pnt(1, 1), b: pnt(4, 5) ),
+            (a: pnt(1, 1), b: pnt(2, 2) ),
+            (a: pnt(1, 1), b: pnt(6, 3) ),
+            (a: pnt(4, 5), b: pnt(2, 2) ),
+            (a: pnt(6, 3), b: pnt(8, 8) )
+        ])
+
 

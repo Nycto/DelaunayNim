@@ -61,6 +61,22 @@ proc add*[T] ( group: var EdgeGroup[T], one, two: T ) =
     group.connect( one, two )
     group.connect( two, one )
 
+proc add*[T] ( group: var EdgeGroup[T], other: EdgeGroup[T] ) =
+    ## Adds an entire EdgeGroup to this one
+    for point, edges in pairs( other.connections ):
+        if group.connections.hasKey(point):
+            for other in items( edges ):
+                group.connections.mget(point).incl(other)
+        else:
+            group.connections.add(point, edges)
+
+    if isSome(other.lowerLeft):
+        group.potentialBottom( other.lowerLeft.get )
+
+    if isSome(other.lowerRight):
+        group.potentialBottom( other.lowerRight.get )
+
+
 proc remove*[T] ( group: var EdgeGroup[T], one, two: T ) =
     ## Removes an edge from this group. Note that the two points are still
     ## considered as part of this EdgeGroup when considering the bottom left
@@ -82,7 +98,6 @@ proc bottomLeft*[T]( group: EdgeGroup[T] ): T =
         raise newException(EmptyGroupError, "EdgeGroup is empty")
     return group.lowerLeft.get
 
-
 iterator edges*[T]( group: EdgeGroup[T] ): tuple[a, b: T] =
     ## Iterates over all the edges in a group
 
@@ -92,6 +107,20 @@ iterator edges*[T]( group: EdgeGroup[T] ): tuple[a, b: T] =
         for point in `[]`(group.connections, key).items:
             if not seen.contains(point):
                 yield (a: key, b: point)
+
+
+proc `$`*[T]( group: EdgeGroup[T] ): string =
+    ## Creates a readable string from an edge group
+    result = "EdgeGroup( "
+    var first = true
+    for edge in edges( group ):
+        if first:
+            first = false
+        else:
+            result.add(", ")
+        result.add( "(" & $edge.a.x & ", " & $edge.a.y & ") -> " )
+        result.add( "(" & $edge.b.x & ", " & $edge.b.y & ")" )
+    result.add(" )")
 
 
 type MissingPointError* = object of Exception ## \
