@@ -15,16 +15,14 @@ test: $(TESTS)
 # A template for defining targets for a test
 define DEFINE_TEST
 
-private/$(patsubst %_test,%,$1).nim:
+build/$1: test/$1.nim test/helpers.nim \
+		$(shell find -name $(patsubst %_test,%,$1).nim)
 
-test/$1.nim:
-
-build/$1: test/$1.nim private/$(patsubst %_test,%,$1).nim test/helpers.nim
 	@echo "$1 ... "
 	$$(shell mkdir -p build/tmp)
 	$$(eval LOG := $$(shell mktemp --tmpdir=build/tmp --suffix=.$1))
 	@nimble c \
-		--path:. --nimcache:../build/nimcache \
+		--path:. --nimcache:./build/nimcache \
 		--out:../build/$1 \
 		test/$1.nim 2>&1 > $$(LOG) || (cat $$(LOG) && exit 1);
 	@build/$1
@@ -32,6 +30,7 @@ build/$1: test/$1.nim private/$(patsubst %_test,%,$1).nim test/helpers.nim
 
 .PHONY: $1
 $1: build/$1
+
 endef
 
 # Define a target for each test
