@@ -11,7 +11,7 @@ import sets
 # generic type classes
 #
 
-type Point* = generic p
+type Point* = concept p
     ## A type interface for dealing with points
     p.x is float
     p.y is float
