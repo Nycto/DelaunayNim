@@ -19,14 +19,15 @@ build/$1: test/$1.nim test/helpers.nim \
 		$(shell find -name $(patsubst %_test,%,$1).nim)
 
 	@echo "$1 ... "
-	$$(shell mkdir -p build/tmp)
-	$$(eval LOG := $$(shell mktemp --tmpdir=build/tmp --suffix=.$1))
 	@nimble c \
-		--path:. --nimcache:./build/nimcache \
-		--out:../build/$1 \
-		test/$1.nim 2>&1 > $$(LOG) || (cat $$(LOG) && exit 1);
+			--path:. --nimcache:./build/nimcache \
+			--out:../build/$1 \
+			test/$1.nim \
+		| grep -v \
+			-e "^Hint: " \
+			-e "^CC: " \
+			-e "Hint: 'AbortOnError'"
 	@build/$1
-	@rm $$(LOG)
 
 .PHONY: $1
 $1: build/$1
