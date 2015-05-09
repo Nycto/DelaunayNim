@@ -3,6 +3,10 @@
 #
 
 
+# Make sure that any failure in a pipe fails the build
+SHELL = /bin/bash -o pipefail
+
+
 # A list of all test names
 TESTS ?= $(notdir $(basename $(wildcard test/*_test.nim)))
 
