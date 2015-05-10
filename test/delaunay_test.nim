@@ -3,8 +3,24 @@ import private/point
 import private/edge
 import delaunay
 
+proc assertEdges(
+    points: openArray[tuple[x, y: float]],
+    expected: openArray[tuple[a, b: tuple[x, y: float]]]
+) =
+    ## Asserts that a set of edges is calculated by the given points
 
-proc assertEdges( expected: seq[tuple[a, b: tuple[x, y: float]]] ) =
+    var edges = toSeq( triangulate(points) )
+
+    # Sort the edges to remove any non-determinism from the tests
+    edges.sort do (a, b: tuple[a, b: tuple[x, y: float]]) -> int:
+        let aCompared = a.a <=> b.a
+        return if aCompared == 0: b.a <=> b.b else: aCompared
+
+    let expect = toSeq(items(expected))
+
+    require( edges == expect )
+
+proc assertEdges( expected: varargs[tuple[a, b: tuple[x, y: float]]] ) =
     ## Asserts that a set of edges is calculated when their points are
     ## extracted and triangulated
 
@@ -14,21 +30,13 @@ proc assertEdges( expected: seq[tuple[a, b: tuple[x, y: float]]] ) =
         points.add(edge.a)
         points.add(edge.b)
 
-    # Run a triangulation based on the extracted points
-    var edges = toSeq( triangulate(points) )
-
-    # Sort the edges to remove any non-determinism from the tests
-    edges.sort do (a, b: tuple[a, b: tuple[x, y: float]]) -> int:
-        let aCompared = a.a <=> b.a
-        return if aCompared == 0: b.a <=> b.b else: aCompared
-
-    require( edges == expected )
+    assertEdges( points, toSeq(items(expected)) )
 
 
 suite "Delaunay triangulation should ":
 
     test "Return empty for empty input":
-        assertEdges( @[] )
+        assertEdges( @[], @[] )
 
     test "Return empty for a single point":
         let edges = toSeq( triangulate(@[ pnt(1, 1) ]) )
@@ -36,20 +44,29 @@ suite "Delaunay triangulation should ":
         require( edges == empty )
 
     test "Return a single edge with two points":
-        assertEdges( @[
-            (a: pnt(1, 1), b: pnt(4, 4))
-        ])
+        assertEdges( pnt(1, 1) -> pnt(4, 4) )
 
     test "Return three edges for a triangle":
-        assertEdges( @[
-            (a: pnt(0, 0), b: pnt(2, 2)),
-            (a: pnt(0, 0), b: pnt(4, 0)),
-            (a: pnt(2, 2), b: pnt(4, 0))
-        ])
+        assertEdges(
+            pnt(0, 0) -> pnt(2, 2),
+            pnt(0, 0) -> pnt(4, 0),
+            pnt(2, 2) -> pnt(4, 0)
+        )
 
     test "Return two edges for a line":
-        assertEdges( @[
-            (a: pnt(0, 0), b: pnt(2, 2)),
-            (a: pnt(2, 2), b: pnt(4, 4))
-        ])
+        assertEdges(
+            [ pnt(0, 0), pnt(2, 2), pnt(4, 4) ],
+            [ pnt(0, 0) -> pnt(2, 2), pnt(2, 2) -> pnt(4, 4) ]
+        )
+
+        assertEdges(
+            [ pnt(0, 0), pnt(4, 4), pnt(2, 2) ],
+            [ pnt(0, 0) -> pnt(2, 2), pnt(2, 2) -> pnt(4, 4) ]
+        )
+
+        assertEdges(
+            [ pnt(4, 4), pnt(0, 0), pnt(2, 2) ],
+            [ pnt(0, 0) -> pnt(2, 2), pnt(2, 2) -> pnt(4, 4) ]
+        )
+
 
