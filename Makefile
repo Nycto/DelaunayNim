@@ -22,8 +22,7 @@ define DEFINE_TEST
 build/$1: test/$1.nim test/helpers.nim \
 		$(shell find -name $(patsubst %_test,%,$1).nim)
 
-	@echo "$1 ... "
-	@nimble c \
+	nimble c \
 			--path:. --nimcache:./build/nimcache \
 			--out:../build/$1 \
 			test/$1.nim \
@@ -31,7 +30,7 @@ build/$1: test/$1.nim test/helpers.nim \
 			-e "^Hint: " \
 			-e "^CC: " \
 			-e "Hint: 'AbortOnError'"
-	@build/$1
+	build/$1
 
 .PHONY: $1
 $1: build/$1
