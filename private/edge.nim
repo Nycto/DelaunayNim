@@ -4,6 +4,9 @@
 
 import point, tables, sets, optional_t, anglesort, sequtils
 
+type Edge*[T] = tuple[a, b: T] ## \
+    ## Two connected points
+
 type EdgeGroup*[T] = object ## \
     ## A group of edges
 

@@ -7,7 +7,7 @@ import point
 
 type Triangle*[T] = object
     ## This may come as a suprise, but a triangle is made up of three points
-    a, b, c: T
+    a*, b*, c*: T
 
 proc newTriangle*[T: Point]( a: T, b: T, c: T ): Triangle[T] =
     ## Constructor

@@ -42,6 +42,9 @@ endef
 $(foreach test,$(TESTS),$(eval $(call DEFINE_TEST,$(test))))
 
 
+# Rerun the overall test when any of the sources change
+build/delaunay_test: $(wildcard private/*.nim)
+
 # Watches for changes and reruns
 .PHONY: watch
 watch:

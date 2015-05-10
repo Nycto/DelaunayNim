@@ -29,6 +29,15 @@ proc pnt*( x, y: float ): tuple[x, y: float] =
 type PointList*[T] = distinct seq[T]
     ## A list of sorted, unique points
 
+proc `<=>`*[T: Point]( a, b: T ): int =
+    ## Compares two points, sorting left to right, bottom to top
+    if a.x < b.x:
+        return -1
+    elif a.x > b.x:
+        return 1
+    else:
+        return cmp(a.y, b.y)
+
 proc newPointList*[T: Point]( list: openArray[T] ): PointList[T] =
     ## Creates a point list from a list of points
 
@@ -46,13 +55,7 @@ proc newPointList*[T: Point]( list: openArray[T] ): PointList[T] =
             output.add(point)
 
     # Sort points left to right, bottom to top
-    output.sort do (a, b: T) -> int:
-        if a.x < b.x:
-            return -1
-        elif a.x > b.x:
-            return 1
-        else:
-            return cmp(a.y, b.y)
+    output.sort(`<=>`)
 
     result = PointList(output)
 
@@ -60,6 +63,10 @@ proc `@`*[T]( points: PointList[T] ): seq[T] =
     ## Convert a Point list back to a sequence
     seq[T](points)
 
+proc len*[T]( points: PointList[T] ): int {.magic: "LengthSeq", noSideEffect.}
+    ## Returns the number of points in a point list
 
+proc `[]`*[T]( s: PointList[T], i: int ): T {.inline.} =
+    seq[T](s)[i]
 
 
