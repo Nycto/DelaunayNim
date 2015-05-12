@@ -44,53 +44,63 @@ proc cmpDistance[T]( base, a, b: T ): int =
 
 
 
-type Direction* = enum ## A rotation direction
+type AngleSorted*[T] = distinct seq[T] ## \
+    ## A list of points that have been sorted by angle
+
+proc `==`*[T]( actual: AngleSorted[T], expected: openArray[T] ): bool =
+    ## Compare an angle sorted value to an array
+    return system.`==`( seq[T](actual), @expected )
+
+
+type Direction* = enum ## \
+    ## A rotation direction
     clockwise, counterclockwise
 
 proc sort*[T: Point](
     points: openArray[T], direction: Direction,
     center: T, reference: T
-): iterator: T =
+): AngleSorted[T] =
     ## Sorts a list of points in the given direction, relative to the edge
     ## formed by drawing a line from `center` to `reference`
 
     # Start by making a copy so we can do an in place sort
-    var clone: seq[T] = `@`[T](points)
+    var output: seq[T] = `@`[T](points)
 
-    result = iterator: T =
+    # Track angles that have already been calculated to reduce the trig
+    var angles = initTable[tuple[x, y: float], float]()
 
-        # Track angles that have already been calculated to reduce the trig
-        var angles = initTable[tuple[x, y: float], float]()
+    output.sort do (a, b: T) -> int:
 
-        clone.sort do (a, b: T) -> int:
+        let angleToA = angles.angle(center, reference, a)
+        let angleToB = angles.angle(center, reference, b)
 
-            let angleToA = angles.angle(center, reference, a)
-            let angleToB = angles.angle(center, reference, b)
+        if angleToA == angleToB:
+            return cmpDistance(center, a, b)
+        elif angleToA == 0:
+            return -1
+        elif angleToB == 0:
+            return 1
+        elif direction == clockwise:
+            return if angleToA < angleToB: 1 else: -1
+        else:
+            return if angleToA < angleToB: -1 else: 1
 
-            if angleToA == angleToB:
-                result = cmpDistance(center, a, b)
-            elif angleToA == 0:
-                result = -1
-            elif angleToB == 0:
-                result = 1
-            elif direction == clockwise:
-                result = if angleToA < angleToB: 1 else: -1
-            else:
-                result = if angleToA < angleToB: -1 else: 1
+    ## Now filter down to everything under 180 degrees
+    for i in 0..<output.len:
 
-        ## Now filter down to everything under 180 degrees
-        for point in clone:
+        let angle = angles.angle(center, reference, output[i])
 
-            let angle = angles.angle(center, reference, point)
+        if direction == clockwise and (angle == 0 or angle > PI):
+            discard
+        elif direction == counterclockwise and (angle == 0 or angle < PI):
+            discard
+        else:
+            # Trim the result once we see the first point that is beyond 180
+            # degrees.  The points are sorted, so the rest are guaranteed to be
+            # over 180 too
+            output.setLen(i)
+            break
 
-            if direction == clockwise and (angle == 0 or angle > PI):
-                yield point
-            elif direction == counterclockwise and (angle == 0 or angle < PI):
-                yield point
-            else:
-                # Return once we see the first point that is beyond 180 degrees.
-                # The points are sorted, so the rest are guaranteed to be over
-                # 180 too
-                return
+    return AngleSorted(output)
 
 

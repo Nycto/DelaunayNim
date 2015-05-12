@@ -64,7 +64,7 @@ suite "Edge Groups should ":
             (a: pnt(4, 5), b: pnt(2, 2) )
         ])
 
-    test "Iterate over connected points":
+    test "Return connected points":
 
         var group = newEdgeGroup[tuple[x, y: float]]()
         group.add( pnt(1, 1), pnt(4, 5) )
@@ -72,10 +72,9 @@ suite "Edge Groups should ":
         group.add( pnt(4, 5), pnt(2, 2) )
         group.add( pnt(4, 5), pnt(6, 6) )
 
-        let connections = toSeq(
-            group.connected(pnt(1, 1), pnt(5, 0), counterclockwise) )
+        let connections = group.connected( pnt(1, 1) )
 
-        require( connections == @[ pnt(2, 2), pnt(4, 5) ] )
+        require( connections == @[ pnt(4, 5), pnt(2, 2) ] )
 
     test "Add edge groups together":
 

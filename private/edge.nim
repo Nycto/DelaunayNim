@@ -129,22 +129,12 @@ proc `$`*[T]( group: EdgeGroup[T] ): string =
 type MissingPointError* = object of Exception ## \
     ## Thrown when trying to read connections of a point that isn't in a group
 
-iterator connected*[T: Point](
-    group: EdgeGroup[T], point: T, sortVersus: T, direction: Direction
-): T =
-    ## Iterates over the points connected to another point, sorted
-    ## relative to `sortVersus`
+proc connected*[T: Point]( group: EdgeGroup[T], point: T ): seq[T] =
+    ## Returns the points connected to a specific point
+
     if not group.connections.hasKey(point):
-        raise newException(MissingPointError, "Point is in group: " & $point)
+        raise newException(MissingPointError, "Point isnt in group: " & $point)
 
-    # FIXME: This copies the list of points into a sequence, just so that we
-    # can iterate over them. It would be nice to just iterate over them
-    # directly.
-    let points = toSeq( items( `[]`(group.connections, point) ) )
-
-    let sorted = sort( points, direction, point, sortVersus )
-
-    for point in sorted():
-        yield point
+    return toSeq( items( `[]`(group.connections, point) ) )
 
 
