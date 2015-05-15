@@ -1,10 +1,13 @@
-import unittest, sequtils
+import unittest, sequtils, algorithm
 import private/edge
 import private/point
 import private/anglesort
 
-proc `==`[T]( actual: EdgeGroup[T], expected: seq[tuple[a, b: T]] ): bool =
-    let edges = toSeq(actual.edges)
+proc `==`[T]( actual: EdgeGroup[T], expected: seq[Edge[T]] ): bool =
+    var edges = toSeq(actual.edges)
+
+    edges.sort do (a, b: Edge[T]) -> int:
+        return a <=> b
 
     # This is kind of a crappy test in that it depends on potentially
     # non-deterministic sorting within Maps and Sets, but its enough for now
@@ -46,9 +49,9 @@ suite "Edge Groups should ":
         group.add( pnt(4, 5), pnt(2, 2) )
 
         require(group == @[
-            (a: pnt(1, 1), b: pnt(4, 5) ),
             (a: pnt(1, 1), b: pnt(2, 2) ),
-            (a: pnt(4, 5), b: pnt(2, 2) )
+            (a: pnt(1, 1), b: pnt(4, 5) ),
+            (a: pnt(2, 2), b: pnt(4, 5) )
         ])
 
     test "Allow edges to be removed":
@@ -61,7 +64,7 @@ suite "Edge Groups should ":
 
         require(group == @[
             (a: pnt(1, 1), b: pnt(4, 5) ),
-            (a: pnt(4, 5), b: pnt(2, 2) )
+            (a: pnt(2, 2), b: pnt(4, 5) )
         ])
 
     test "Return connected points":
@@ -90,10 +93,10 @@ suite "Edge Groups should ":
         one.add(two)
 
         require( one == @[
-            (a: pnt(1, 1), b: pnt(4, 5) ),
             (a: pnt(1, 1), b: pnt(2, 2) ),
+            (a: pnt(1, 1), b: pnt(4, 5) ),
             (a: pnt(1, 1), b: pnt(6, 3) ),
-            (a: pnt(4, 5), b: pnt(2, 2) ),
+            (a: pnt(2, 2), b: pnt(4, 5) ),
             (a: pnt(6, 3), b: pnt(8, 8) )
         ])
 

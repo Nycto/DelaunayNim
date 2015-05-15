@@ -28,6 +28,14 @@ proc `<=>`*[T: Point]( a, b: T ): int =
     else:
         return cmp(a.y, b.y)
 
+proc toStr*[T: Point]( point: T ): string =
+    ## Converts an edge to a readable string
+    result = "("
+    result.add( if floor(point.x) == point.x: $(int(point.x)) else: $point.x )
+    result.add(", ")
+    result.add( if floor(point.y) == point.y: $(int(point.y)) else: $point.y )
+    result.add(")")
+
 
 #
 # PointList is a phantom type that guarantees a list of points is unique and

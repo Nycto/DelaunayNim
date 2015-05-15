@@ -7,6 +7,19 @@ import point, tables, sets, optional_t, anglesort, sequtils
 type Edge*[T] = tuple[a, b: T] ## \
     ## Two connected points
 
+proc `->`*[T: Point]( a, b: T ): Edge[T] {.inline.} =
+    ## Creates an edge from two points
+    return if (a <=> b) > 0: (a: b, b: a) else: (a: a, b: b)
+
+proc `<=>`*[T: Point]( a, b: Edge[T] ): int =
+    ## Sorts two edges
+    let aCompared = a.a <=> b.a
+    if aCompared == 0:
+        return a.b <=> b.b
+    else:
+        return aCompared
+
+
 type EdgeGroup*[T] = object ## \
     ## A group of edges
 
@@ -24,7 +37,10 @@ type EmptyGroupError* = object of Exception ## \
     ## Thrown when trying to read something out of a group without edges
 
 
-proc newEdgeGroup*[T: Point](): EdgeGroup[T] =
+proc add*[T: Point] ( group: var EdgeGroup[T], one, two: T )
+
+
+proc newEdgeGroup*[T: Point]( edges: varargs[Edge[T]] ): EdgeGroup[T] =
     ## Creates a new, empty edge group
     result = EdgeGroup[T](
         connections: initTable[T, HashSet[T]](),
@@ -32,8 +48,11 @@ proc newEdgeGroup*[T: Point](): EdgeGroup[T] =
         lowerRight: None[T]()
     )
 
+    for edge in edges:
+        add( result, edge.a, edge.b )
 
-proc potentialBottom[T]( group: var EdgeGroup[T], point: T ) =
+
+proc potentialBottom[T: Point]( group: var EdgeGroup[T], point: T ) =
     ## Compares a point to the bottom most points already tracked. Replaces
     ## those points with this one if this is lower. Adds it if it is on the
     ## same level.
@@ -48,7 +67,7 @@ proc potentialBottom[T]( group: var EdgeGroup[T], point: T ) =
         if point.x > group.lowerRight.get.x:
             group.lowerRight = Some(point)
 
-proc connect[T]( group: var EdgeGroup[T], base, other: T ) =
+proc connect[T: Point]( group: var EdgeGroup[T], base, other: T ) =
     ## Adds a point and its connection to his group
 
     if group.connections.hasKey(base):
@@ -57,14 +76,14 @@ proc connect[T]( group: var EdgeGroup[T], base, other: T ) =
         group.connections.add(base, toSet([ other ]))
 
 
-proc add*[T] ( group: var EdgeGroup[T], one, two: T ) =
+proc add*[T: Point] ( group: var EdgeGroup[T], one, two: T ) =
     ## Adds an edge to this group
     group.potentialBottom( one )
     group.potentialBottom( two )
     group.connect( one, two )
     group.connect( two, one )
 
-proc add*[T] ( group: var EdgeGroup[T], other: EdgeGroup[T] ) =
+proc add*[T: Point] ( group: var EdgeGroup[T], other: EdgeGroup[T] ) =
     ## Adds an entire EdgeGroup to this one
     for point, edges in pairs( other.connections ):
         if group.connections.hasKey(point):
@@ -80,7 +99,7 @@ proc add*[T] ( group: var EdgeGroup[T], other: EdgeGroup[T] ) =
         group.potentialBottom( other.lowerRight.get )
 
 
-proc remove*[T] ( group: var EdgeGroup[T], one, two: T ) =
+proc remove*[T: Point] ( group: var EdgeGroup[T], one, two: T ) =
     ## Removes an edge from this group. Note that the two points are still
     ## considered as part of this EdgeGroup when considering the bottom left
     ## and bottom right points
@@ -89,19 +108,19 @@ proc remove*[T] ( group: var EdgeGroup[T], one, two: T ) =
     if group.connections.hasKey(two):
         group.connections.mget(two).excl(one)
 
-proc bottomRight*[T]( group: EdgeGroup[T] ): T =
+proc bottomRight*[T: Point]( group: EdgeGroup[T] ): T =
     ## Returns the bottom right point in this edge group
     if isNone group.lowerRight:
         raise newException(EmptyGroupError, "EdgeGroup is empty")
     return group.lowerRight.get
 
-proc bottomLeft*[T]( group: EdgeGroup[T] ): T =
+proc bottomLeft*[T: Point]( group: EdgeGroup[T] ): T =
     ## Returns the bottom left point in this edge group
     if isNone group.lowerLeft:
         raise newException(EmptyGroupError, "EdgeGroup is empty")
     return group.lowerLeft.get
 
-iterator edges*[T]( group: EdgeGroup[T] ): tuple[a, b: T] =
+iterator edges*[T: Point]( group: EdgeGroup[T] ): Edge[T] =
     ## Iterates over all the edges in a group
 
     var seen = initSet[T]()
@@ -109,10 +128,10 @@ iterator edges*[T]( group: EdgeGroup[T] ): tuple[a, b: T] =
         seen.incl(key)
         for point in `[]`(group.connections, key).items:
             if not seen.contains(point):
-                yield (a: key, b: point)
+                yield (key -> point)
 
 
-proc `$`*[T]( group: EdgeGroup[T] ): string =
+proc `$`*[T: Point]( group: EdgeGroup[T] ): string =
     ## Creates a readable string from an edge group
     result = "EdgeGroup( "
     var first = true
@@ -121,8 +140,7 @@ proc `$`*[T]( group: EdgeGroup[T] ): string =
             first = false
         else:
             result.add(", ")
-        result.add( "(" & $edge.a.x & ", " & $edge.a.y & ") -> " )
-        result.add( "(" & $edge.b.x & ", " & $edge.b.y & ")" )
+        result.add( toStr(edge.a) & " -> " & toStr(edge.b) )
     result.add(" )")
 
 

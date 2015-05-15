@@ -5,24 +5,22 @@ import delaunay
 
 proc assertEdges(
     points: openArray[tuple[x, y: float]],
-    expected: openArray[tuple[a, b: tuple[x, y: float]]]
+    expected: openArray[Edge[tuple[x, y: float]]]
 ) =
     ## Asserts that a set of edges is calculated by the given points
-
     var edges = toSeq( triangulate(points) )
 
     # Sort the edges to remove any non-determinism from the tests
-    edges.sort do (a, b: tuple[a, b: tuple[x, y: float]]) -> int:
-        let aCompared = a.a <=> b.a
-        return if aCompared == 0: b.a <=> b.b else: aCompared
+    edges.sort do (a, b: Edge[tuple[x, y: float]]) -> int:
+        return a <=> b
 
     let expect = toSeq(items(expected))
-
     require( edges == expect )
 
 proc assertEdges( expected: varargs[tuple[a, b: tuple[x, y: float]]] ) =
     ## Asserts that a set of edges is calculated when their points are
     ## extracted and triangulated
+
 
     # Pull all the points from all the edges into a list
     var points: seq[tuple[x, y: float]] = @[]
@@ -67,6 +65,20 @@ suite "Delaunay triangulation should ":
         assertEdges(
             [ pnt(4, 4), pnt(0, 0), pnt(2, 2) ],
             [ pnt(0, 0) -> pnt(2, 2), pnt(2, 2) -> pnt(4, 4) ]
+        )
+
+    test "Four points":
+        # Edges for the following grid:
+        #
+        # 2 |    *
+        # 1 | *        *
+        # 0 |    *
+        #   -------------
+        #     0  1  2  3
+        assertEdges(
+            pnt(0, 1) -> pnt(1, 0), pnt(0, 1) -> pnt(1, 2),
+            pnt(1, 0) -> pnt(1, 2), pnt(1, 0) -> pnt(3, 1),
+            pnt(1, 2) -> pnt(3, 1)
         )
 
 

@@ -103,4 +103,9 @@ proc sort*[T: Point](
 
     return AngleSorted(output)
 
+iterator items*[T]( points: AngleSorted[T] ): T =
+    ## Iterate over each point
+    for point in items( seq[T](points) ):
+        yield point
+
 
