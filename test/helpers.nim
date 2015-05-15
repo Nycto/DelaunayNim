@@ -4,6 +4,10 @@
 
 import sequtils
 
+proc p*( x, y: float ): tuple[x, y: float] =
+    ## Creates a point
+    result = (x, y)
+
 proc `->`*( a, b: tuple[x, y: float] ): tuple[a, b: tuple[x, y: float]] =
     ## Creates an edge from two tuples
     result = (a: a, b: b)

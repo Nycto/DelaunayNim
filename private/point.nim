@@ -15,10 +15,6 @@ type Point* = concept p ## \
     p.x is float
     p.y is float
 
-proc pnt*( x, y: float ): tuple[x, y: float] =
-    ## Creates a point
-    result = (x, y)
-
 proc `<=>`*[T: Point]( a, b: T ): int =
     ## Compares two points, sorting left to right, bottom to top
     if a.x < b.x:

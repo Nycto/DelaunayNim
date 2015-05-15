@@ -37,34 +37,34 @@ suite "Delaunay triangulation should ":
         assertEdges( @[], @[] )
 
     test "Return empty for a single point":
-        let edges = toSeq( triangulate(@[ pnt(1, 1) ]) )
+        let edges = toSeq( triangulate(@[ p(1, 1) ]) )
         let empty: seq[tuple[a, b: tuple[x, y: float]]] = @[]
         require( edges == empty )
 
     test "Return a single edge with two points":
-        assertEdges( pnt(1, 1) -> pnt(4, 4) )
+        assertEdges( p(1, 1) -> p(4, 4) )
 
     test "Return three edges for a triangle":
         assertEdges(
-            pnt(0, 0) -> pnt(2, 2),
-            pnt(0, 0) -> pnt(4, 0),
-            pnt(2, 2) -> pnt(4, 0)
+            p(0, 0) -> p(2, 2),
+            p(0, 0) -> p(4, 0),
+            p(2, 2) -> p(4, 0)
         )
 
     test "Return two edges for a line":
         assertEdges(
-            [ pnt(0, 0), pnt(2, 2), pnt(4, 4) ],
-            [ pnt(0, 0) -> pnt(2, 2), pnt(2, 2) -> pnt(4, 4) ]
+            [ p(0, 0), p(2, 2), p(4, 4) ],
+            [ p(0, 0) -> p(2, 2), p(2, 2) -> p(4, 4) ]
         )
 
         assertEdges(
-            [ pnt(0, 0), pnt(4, 4), pnt(2, 2) ],
-            [ pnt(0, 0) -> pnt(2, 2), pnt(2, 2) -> pnt(4, 4) ]
+            [ p(0, 0), p(4, 4), p(2, 2) ],
+            [ p(0, 0) -> p(2, 2), p(2, 2) -> p(4, 4) ]
         )
 
         assertEdges(
-            [ pnt(4, 4), pnt(0, 0), pnt(2, 2) ],
-            [ pnt(0, 0) -> pnt(2, 2), pnt(2, 2) -> pnt(4, 4) ]
+            [ p(4, 4), p(0, 0), p(2, 2) ],
+            [ p(0, 0) -> p(2, 2), p(2, 2) -> p(4, 4) ]
         )
 
     test "Four points":
@@ -76,9 +76,9 @@ suite "Delaunay triangulation should ":
         #   -------------
         #     0  1  2  3
         assertEdges(
-            pnt(0, 1) -> pnt(1, 0), pnt(0, 1) -> pnt(1, 2),
-            pnt(1, 0) -> pnt(1, 2), pnt(1, 0) -> pnt(3, 1),
-            pnt(1, 2) -> pnt(3, 1)
+            p(0, 1) -> p(1, 0), p(0, 1) -> p(1, 2),
+            p(1, 0) -> p(1, 2), p(1, 0) -> p(3, 1),
+            p(1, 2) -> p(3, 1)
         )
 
 

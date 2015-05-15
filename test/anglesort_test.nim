@@ -7,59 +7,59 @@ import algorithm
 suite "AngleSort should ":
 
     test "Sort points in clockwise order":
-        let iter = [ pnt(3, 10), pnt(3, 5), pnt(8, 4), pnt(1, 2) ]
-            .sort( clockwise, pnt(4, 0), pnt(1, 1) )
+        let iter = [ p(3, 10), p(3, 5), p(8, 4), p(1, 2) ]
+            .sort( clockwise, p(4, 0), p(1, 1) )
 
-        require( iter == [ pnt(1, 2), pnt(3, 5), pnt(3, 10), pnt(8, 4) ] )
+        require( iter == [ p(1, 2), p(3, 5), p(3, 10), p(8, 4) ] )
 
     test "Sort points in counter clockwise order":
-        let iter = [  pnt(1, 2), pnt(0, 1), pnt(2, 1) ]
-            .sort( counterclockwise, pnt(1, 0), pnt(5, 1) )
+        let iter = [  p(1, 2), p(0, 1), p(2, 1) ]
+            .sort( counterclockwise, p(1, 0), p(5, 1) )
 
-        require( iter == [ pnt(2, 1), pnt(1, 2), pnt(0, 1) ] )
+        require( iter == [ p(2, 1), p(1, 2), p(0, 1) ] )
 
 
     test "Sort by distance when the angle is the same":
         let iter =
-            [ pnt(1, 2), pnt(1, 1), pnt(2, 2), pnt(1, 1), pnt(2, 1), pnt(3, 3) ]
-                .sort( counterclockwise, pnt(0, 0), pnt(5, 1) )
+            [ p(1, 2), p(1, 1), p(2, 2), p(1, 1), p(2, 1), p(3, 3) ]
+                .sort( counterclockwise, p(0, 0), p(5, 1) )
 
         require( iter == [
-            pnt(2, 1), pnt(1, 1), pnt(1, 1), pnt(2, 2), pnt(3, 3), pnt(1, 2)
+            p(2, 1), p(1, 1), p(1, 1), p(2, 2), p(3, 3), p(1, 2)
         ] )
 
 
     test "Handle points with the same slope":
 
         test "Clockwise":
-            let iter = [ pnt(1, 1), pnt(5, 0) ]
-                .sort( clockwise, pnt(0, 0), pnt(4, 4) )
+            let iter = [ p(1, 1), p(5, 0) ]
+                .sort( clockwise, p(0, 0), p(4, 4) )
 
-            require( iter == [ pnt(1, 1), pnt(5, 0) ] )
+            require( iter == [ p(1, 1), p(5, 0) ] )
 
         test "CounterClockwise":
-            let iter = [ pnt(1, 1), pnt(0, 5) ]
-                .sort( counterclockwise, pnt(0, 0), pnt(4, 4) )
+            let iter = [ p(1, 1), p(0, 5) ]
+                .sort( counterclockwise, p(0, 0), p(4, 4) )
 
-            require( iter == [ pnt(1, 1), pnt(0, 5) ] )
+            require( iter == [ p(1, 1), p(0, 5) ] )
 
     test "Remove points greater than 180 degrees":
 
         let points = [
-            pnt( 5, 1 ), pnt( 5, 5 ), pnt( 3, 5 ),
-            pnt( 0, 5 ),
-            pnt( -3, 5 ), pnt( -5, 5 ), pnt( -5, 1 ),
-            pnt( -5, 0 ),
-            pnt( -5, -1 ), pnt(-5, -5), pnt(-3, -5),
-            pnt( 0, -5 ),
-            pnt( 1, -5 ), pnt( 5, -5 ), pnt( 5, -3 )
+            p( 5, 1 ), p( 5, 5 ), p( 3, 5 ),
+            p( 0, 5 ),
+            p( -3, 5 ), p( -5, 5 ), p( -5, 1 ),
+            p( -5, 0 ),
+            p( -5, -1 ), p(-5, -5), p(-3, -5),
+            p( 0, -5 ),
+            p( 1, -5 ), p( 5, -5 ), p( 5, -3 )
         ];
 
         test "CounterClockwise":
-            let iter = points.sort(counterclockwise, pnt(0, 0), pnt(5, 0))
+            let iter = points.sort(counterclockwise, p(0, 0), p(5, 0))
             require( iter == points[0..6] )
 
         test "Clockwise":
-            let iter = points.sort(clockwise, pnt(0, 0), pnt(5, 0))
+            let iter = points.sort(clockwise, p(0, 0), p(5, 0))
             require( iter == points.reversed[0..6] )
 
