@@ -13,6 +13,12 @@ proc newTriangle*[T: Point]( a: T, b: T, c: T ): Triangle[T] =
     ## Constructor
     result = Triangle[T](a: a, b: b, c: c)
 
+proc `$`*[T: Point]( tri: Triangle[T] ): string =
+    result = "Triangle(" &
+        toStr(tri.a) & ", " &
+        toStr(tri.b) & ", " &
+        toStr(tri.c) & ")"
+
 proc isTriangle*[T: Point]( tri: Triangle[T] ): bool =
     ## Determines whether three points actualy form a valid triangle. The only
     ## way this returns false is if they form a line

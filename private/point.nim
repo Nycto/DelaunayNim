@@ -83,11 +83,16 @@ proc newPointList*[T: Point]( list: openArray[T] ): PointList[T] =
 
     result = PointList[T](points: output, start: 0, length: output.len)
 
+iterator items*[T]( points: PointList[T] ): T =
+    ## Iterates over each point in this list
+    for i in points.start .. <(points.start + points.length):
+        yield points.points[i]
+
 proc `@`*[T]( points: PointList[T] ): seq[T] =
     ## Convert a Point list back to a sequence
     result = @[]
-    for i in points.start .. <(points.start + points.length):
-        result.add( points.points[i] )
+    for point in points:
+        result.add(point)
 
 proc len*[T]( points: PointList[T] ): int =
     ## Returns the number of points in a point list
@@ -98,6 +103,18 @@ proc `[]`*[T]( points: PointList[T], i: int ): T {.inline.} =
     if i >= points.length:
         raise newException(IndexError, "Index is out of bounds")
     points.points[i + points.start]
+
+proc `$`*[T]( points: PointList[T] ): string =
+    ## Return a point list as a string
+    result = "Points("
+    var first = true
+    for point in points:
+        if first:
+            first = false
+        else:
+            result.add(", ")
+        result.add( toStr(point) )
+    result.add(")")
 
 type CantSplitError* = object of Exception ## \
     ## Thrown when trying to split a list of points that is too small
