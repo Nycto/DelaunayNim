@@ -2,7 +2,7 @@
 # Runs a delaunay triangulation on a set of points
 #
 
-import optional_t
+import optional_t, sequtils
 import private/point
 import private/edge
 import private/anglesort
@@ -158,4 +158,8 @@ iterator triangulate*[T: Point]( rawPoints: openArray[T] ): tuple[a, b: T] =
     let edges = calculate(points)
     for edge in edges.edges:
         yield edge
+
+proc triangulate*[T: Point]( rawPoints: openArray[T] ): seq[tuple[a, b: T]] =
+    ## Returns a list of edges triangulated by the given points
+    return toSeq( triangulate(rawPoints) )
 
