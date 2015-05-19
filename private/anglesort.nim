@@ -2,7 +2,7 @@
 # Sort points based on their angle from a line
 #
 
-from point import Point
+import point
 import algorithm, math, tables, sequtils
 
 type AngleCache = Table[tuple[x, y: float], float]
@@ -51,6 +51,17 @@ proc `==`*[T]( actual: AngleSorted[T], expected: openArray[T] ): bool =
     ## Compare an angle sorted value to an array
     return system.`==`( seq[T](actual), @expected )
 
+proc `$`*[T: Point]( points: AngleSorted[T] ): string =
+    ## Convert to a string
+    result = "AngleSorted("
+    var first = true
+    for point in items(seq[T](points)):
+        if first:
+            first = false
+        else:
+            result.add(", ")
+        result.add( toStr(point) )
+    result.add(")")
 
 type Direction* = enum ## \
     ## A rotation direction
