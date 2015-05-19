@@ -101,3 +101,23 @@ suite "Delaunay triangulation should ":
         let triangulated = triangulate(expected)
         require( expected == triangulated )
 
+    test "One Merge":
+
+        # Edges for the following grid:
+        #
+        # 3 |    *
+        # 2 |    *
+        # 1 | *     *
+        # 0 |    *
+        #   ----------
+        #     0  1  2
+
+        let expected = edges(
+            p(0, 1) -> p(1, 0), p(0, 1) -> p(1, 2), p(0, 1) -> p(1, 3),
+            p(1, 0) -> p(2, 1), p(1, 0) -> p(1, 2),
+            p(1, 2) -> p(2, 1), p(1, 2) -> p(1, 3),
+            p(1, 3) -> p(2, 1) )
+        let triangulated = triangulate(expected)
+        require( expected == triangulated )
+
+
