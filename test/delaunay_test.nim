@@ -139,4 +139,28 @@ suite "Delaunay triangulation should ":
         let triangulated = triangulate(expected)
         require( expected == triangulated )
 
+    test "Complex grid":
+
+        # Edges for the following grid:
+        #
+        # 3 |    *     *     *
+        # 2 |    *        *
+        # 1 | *     *        *
+        # 0 |    *           *
+        #   -------------------
+        #     0  1  2  3  4  5
+
+        let expected = edges(
+            p(0, 1) -> p(1, 0), p(0, 1) -> p(1, 2), p(0, 1) -> p(1, 3),
+            p(1, 0) -> p(1, 2), p(1, 0) -> p(2, 1), p(1, 0) -> p(5, 0),
+            p(1, 2) -> p(2, 1), p(1, 2) -> p(3, 3), p(1, 2) -> p(1, 3),
+            p(1, 3) -> p(3, 3),
+            p(2, 1) -> p(5, 0), p(2, 1) -> p(4, 2), p(2, 1) -> p(3, 3),
+            p(3, 3) -> p(4, 2), p(3, 3) -> p(5, 3),
+            p(4, 2) -> p(5, 0), p(4, 2) -> p(5, 1), p(4, 2) -> p(5, 3),
+            p(5, 0) -> p(5, 1),
+            p(5, 1) -> p(5, 3) )
+        let triangulated = triangulate(expected)
+        require( expected == triangulated )
+
 
