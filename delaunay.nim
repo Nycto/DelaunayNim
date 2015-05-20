@@ -104,12 +104,43 @@ proc mergeUsingBase[T: Point](
         let newBase = (left: leftCandidate.get, right: baseEdge.right)
         mergeUsingBase[T]( left, right, newBase )
 
+proc chooseBase[T: Point](
+    group: EdgeGroup[T], direction: Direction,
+    examine: T, reference: T
+): T =
+    ## Chooses the base point for a new merge from a single group
+    ## * direction - The direction to sort pulled edges
+    ## * best - The best point seen so far
+    ## * examine - The next point to examine
+    ## * reference - The reference point from the other side of the merge
+
+    # If we see a horizontal line, both right and left are on even ground
+    if reference.y == examine.y:
+        return examine
+
+    let connected = sort(
+        connected(group, examine),
+        direction, examine, reference
+    ).first
+
+    # No more options? Guess this is it...
+    if connected.isNone:
+        return examine
+    else:
+        return chooseBase( group, direction, connected.get, reference )
 
 proc chooseBases[T: Point](
     left: EdgeGroup[T], right: EdgeGroup[T]
 ): tuple[left, right: T] =
     ## Chooses base points and invokes a function with them
-    return (left: left.bottomRight, right: right.bottomRight)
+
+    let baseRight = chooseBase(
+        right, counterclockwise, right.bottomLeft, left.bottomRight)
+
+    let baseLeft = chooseBase(
+        left, clockwise, left.bottomRight, baseRight)
+
+    return (left: baseLeft, right: baseRight)
 
 
 proc merge[T: Point](

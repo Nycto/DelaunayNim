@@ -102,7 +102,6 @@ suite "Delaunay triangulation should ":
         require( expected == triangulated )
 
     test "One Merge":
-
         # Edges for the following grid:
         #
         # 3 |    *
@@ -121,7 +120,6 @@ suite "Delaunay triangulation should ":
         require( expected == triangulated )
 
     test "Right half of the complex grid":
-
         # Edges for the following grid:
         #
         # 3 |          *     *
@@ -140,7 +138,6 @@ suite "Delaunay triangulation should ":
         require( expected == triangulated )
 
     test "Complex grid":
-
         # Edges for the following grid:
         #
         # 3 |    *     *     *
@@ -162,5 +159,104 @@ suite "Delaunay triangulation should ":
             p(5, 1) -> p(5, 3) )
         let triangulated = triangulate(expected)
         require( expected == triangulated )
+
+    test "Left higher than right":
+        # Edges for the following grid:
+        #
+        # 2 | *  *
+        # 1 |
+        # 0 |       *  *
+        #   -------------
+        #     0  1  2  3
+
+        let expected = edges(
+            p(0, 2) -> p(1, 2), p(0, 2) -> p(2, 0),
+            p(1, 2) -> p(2, 0), p(1, 2) -> p(3, 0),
+            p(2, 0) -> p(3, 0) )
+        let triangulated = triangulate(expected)
+        require( expected == triangulated )
+
+    test "Tie for bottom":
+        ## Edges for the following grid:
+        ##
+        ## 2 |       *  *  *
+        ## 1 |
+        ## 0 | *  *  *
+        ##   ----------------
+        ##     0  1  2  3  4
+
+        let expected = edges(
+            p(0, 0) -> p(1, 0), p(0, 0) -> p(2, 2),
+            p(1, 0) -> p(2, 0), p(1, 0) -> p(2, 2),
+            p(2, 0) -> p(2, 2), p(2, 0) -> p(3, 2), p(2, 0) -> p(4, 2),
+            p(2, 2) -> p(3, 2),
+            p(3, 2) -> p(4, 2) )
+        let triangulated = triangulate(expected)
+        require( expected == triangulated )
+
+    test "Horizontal grid":
+        # Edges for the following grid:
+        #
+        # 0 | *  *  *  *
+        #   -------------
+        #     0  1  2  3
+
+        let expected = edges(
+            p(0, 0) -> p(1, 0),
+            p(1, 0) -> p(2, 0),
+            p(2, 0) -> p(3, 0) )
+        let triangulated = triangulate(expected)
+        require( expected == triangulated )
+
+    test "Right higher than left":
+        # Edges for the following grid:
+        #
+        # 2 |       *  *
+        # 1 |
+        # 0 | *  *
+        #   -------------
+        #     0  1  2  3
+
+        let expected = edges(
+            p(0, 0) -> p(1, 0), p(0, 0) -> p(2, 2),
+            p(1, 0) -> p(2, 2), p(1, 0) -> p(3, 2),
+            p(2, 2) -> p(3, 2) )
+        let triangulated = triangulate(expected)
+        require( expected == triangulated )
+
+    test "Deceptive base edge":
+        # Edges for the following grid:
+        #
+        # 2 | *     *
+        # 1 | *
+        # 0 | *
+        #   -------------
+        #     0  1  2  3
+
+        let expected = edges(
+            p(0, 0) -> p(0, 1), p(0, 0) -> p(2, 2),
+            p(0, 1) -> p(0, 2), p(0, 1) -> p(2, 2),
+            p(0, 2) -> p(2, 2) )
+        let triangulated = triangulate(expected)
+        require( expected == triangulated )
+
+    test "Merge from non-bottom":
+
+        # Edges for the following grid:
+        #
+        # 3 |             *
+        # 2 |       *
+        # 1 |       *
+        # 0 | *
+        #   ----------------
+        #     0  1  2  3  4
+
+        let expected = edges(
+            p(0, 0) -> p(2, 1), p(0, 0) -> p(2, 2),
+            p(2, 1) -> p(2, 2), p(2, 1) -> p(4, 3),
+            p(2, 2) -> p(4, 3) )
+        let triangulated = triangulate(expected)
+        require( expected == triangulated )
+
 
 
