@@ -140,7 +140,13 @@ proc chooseBases[T: Point](
     let baseLeft = chooseBase(
         left, clockwise, left.bottomRight, baseRight)
 
-    return (left: baseLeft, right: baseRight)
+    # Walk the right side back towards the right to confirm that we made
+    # the correct choice before. This can fix situations where we chose
+    # the wrong baseLeft in the first pass
+    let verifiedRight = chooseBase(
+        right, counterclockwise, baseRight, baseLeft)
+
+    return (left: baseLeft, right: verifiedRight)
 
 
 proc merge[T: Point](

@@ -258,5 +258,22 @@ suite "Delaunay triangulation should ":
         let triangulated = triangulate(expected)
         require( expected == triangulated )
 
+    test "Reconsider right base edge":
+        # Edges for the following grid:
+        #
+        # 4 |             *
+        # 3 |
+        # 2 |          *
+        # 1 |          *
+        # 0 | *
+        #   ----------------
+        #     0  1  2  3  4
+
+        let expected = edges(
+            p(0, 0) -> p(3, 1), p(0, 0) -> p(3, 2), p(0, 0) -> p(4, 4),
+            p(3, 1) -> p(3, 2), p(3, 1) -> p(4, 4),
+            p(3, 2) -> p(4, 4) )
+        let triangulated = triangulate(expected)
+        require( expected == triangulated )
 
 
