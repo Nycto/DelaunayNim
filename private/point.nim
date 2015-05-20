@@ -127,9 +127,14 @@ proc split*[T](
     let rightLength = toInt(floor(halfway))
 
     let left = PointList[T](
-        points: points.points, start: points.start, length: leftLength)
+        points: points.points,
+        start: points.start,
+        length: leftLength)
+
     let right = PointList[T](
-        points: points.points, start: leftLength, length: rightLength)
+        points: points.points,
+        start: points.start + leftLength,
+        length: rightLength)
 
     return (left: left, right: right)
 

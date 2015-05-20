@@ -61,6 +61,21 @@ suite "PointLists should ":
         require( @left == @[ p(1, 2), p(2, 1), p(4, 5) ] )
         require( @right == @[ p(6, 3), p(7, 8) ] )
 
+    test "Allow splitting a split":
+        let points = newPointList([
+            p(0, 1), p(1, 0), p(1, 2), p(1, 3), p(2, 1),
+            p(3, 3), p(4, 2), p(5, 0), p(5, 1), p(5, 3) ])
+
+        let (left, right) = points.split
+
+        let (rLeft, rRight) = right.split
+        require( @rRight == @[ p(5, 1), p(5, 3) ] )
+        require( @rLeft == @[ p(3, 3), p(4, 2), p(5, 0) ] )
+
+        let (lLeft, lRight) = left.split
+        require( @lRight == @[ p(1, 3), p(2, 1) ] )
+        require( @lLeft == @[ p(0, 1), p(1, 0), p(1, 2) ] )
+
     test "Throw when trying to split a small list":
         let points = newPointList([ p(1, 2), p(2, 1), p(4, 5) ])
         expect(CantSplitError):
