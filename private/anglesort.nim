@@ -88,9 +88,9 @@ proc sort*[T: Point](
         if angleToA == angleToB:
             return cmpDistance(center, a, b)
         elif angleToA == 0:
-            return -1
-        elif angleToB == 0:
             return 1
+        elif angleToB == 0:
+            return -1
         elif direction == clockwise:
             return if angleToA < angleToB: 1 else: -1
         else:
@@ -101,9 +101,9 @@ proc sort*[T: Point](
 
         let angle = angles.angle(center, reference, output[i])
 
-        if direction == clockwise and (angle == 0 or angle > PI):
+        if direction == clockwise and angle > PI:
             discard
-        elif direction == counterclockwise and (angle == 0 or angle < PI):
+        elif direction == counterclockwise and angle < PI:
             discard
         else:
             # Trim the result once we see the first point that is beyond 180
