@@ -276,4 +276,38 @@ suite "Delaunay triangulation should ":
         let triangulated = triangulate(expected)
         require( expected == triangulated )
 
+    test "Vertical line":
+        # Edges for the following grid:
+        #
+        # 3 |    *
+        # 2 |    *
+        # 1 |    *
+        # 0 |    *
+        #   -------------
+        #     0  1  2  3
+
+        let expected = edges(
+            p(1, 0) -> p(1, 1),
+            p(1, 1) -> p(1, 2),
+            p(1, 2) -> p(1, 3) )
+        let triangulated = triangulate(expected)
+        require( expected == triangulated )
+
+    test "Diagonal line":
+        # Edges for the following grid:
+        #
+        # 3 |          *
+        # 2 |       *
+        # 1 |    *
+        # 0 | *
+        #   -------------
+        #     0  1  2  3
+
+        let expected = edges(
+            p(0, 0) -> p(1, 1),
+            p(1, 1) -> p(2, 2),
+            p(2, 2) -> p(3, 3) )
+        let triangulated = triangulate(expected)
+        require( expected == triangulated )
+
 

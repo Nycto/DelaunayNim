@@ -33,13 +33,13 @@ suite "AngleSort should ":
 
         test "Clockwise":
             let iter = [ p(1, 1), p(5, 0) ]
-                .sort( clockwise, p(0, 0), p(3, 4) )
+                .sort( clockwise, p(0, 0), p(4, 4) )
 
             require( iter == [ p(1, 1), p(5, 0) ] )
 
         test "CounterClockwise":
             let iter = [ p(1, 1), p(0, 5) ]
-                .sort( counterclockwise, p(0, 0), p(5, 4) )
+                .sort( counterclockwise, p(0, 0), p(4, 4) )
 
             require( iter == [ p(1, 1), p(0, 5) ] )
 
@@ -63,9 +63,9 @@ suite "AngleSort should ":
             let iter = points.sort(clockwise, p(0, 0), p(5, 0))
             require( iter == points.reversed[0..6] )
 
-    test "Treat a zero degree angle as 360 degrees":
+    test "Include 0 degree angles when filtering":
 
         let points = [ p(2, 1), p(3, 3), p(4, 2), p(-1, 2) ]
         let iter = points.sort(clockwise, p(5, 0), p(2, 1))
-        require( iter == [ p(3, 3), p(4, 2) ] )
+        require( iter == [ p(2, 1), p(-1, 2), p(3, 3), p(4, 2) ] )
 
