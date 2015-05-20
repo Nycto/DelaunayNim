@@ -1,49 +1,5 @@
-import unittest, sequtils, helpers, algorithm, sets
-import private/point
-import private/edge
+import unittest, helpers, sets
 import delaunay
-
-type EdgeList = seq[Edge[tuple[x, y: float]]]
-
-proc edges( expected: varargs[Edge[tuple[x, y: float]]] ): EdgeList =
-    return EdgeList(@expected)
-
-proc `$`( edges: EdgeList ): string =
-    result = "EdgeList("
-    var first = true
-    for edge in edges:
-        if first:
-            first = false
-        else:
-            result.add(", ")
-        result.add( toStr(edge.a) & " -> " & toStr(edge.b) )
-    result.add(")")
-
-proc points( edges: EdgeList ): seq[tuple[x, y: float]] =
-    # Pull all the points from all the edges into a list
-    result = @[]
-    for edge in seq[Edge[tuple[x, y: float]]](edges):
-        result.add(edge.a)
-        result.add(edge.b)
-
-proc triangulate( expected: EdgeList ): EdgeList =
-    ## Extract the points from an edge list and run a triangulation
-    let pointList = points(expected)
-    let asSeq = toSeq( triangulate(pointList) )
-    return EdgeList( asSeq )
-
-proc `==` ( expected, actual: EdgeList ): bool =
-    ## Compare two edge lists
-    var expectedSet = toSet(expected)
-    var actualSet = toSet(actual)
-
-    for missing in difference(expectedSet, actualSet):
-        checkpoint("Missing: " & toStr(missing.a) & " -> " & toStr(missing.b))
-
-    for extra in difference(actualSet, expectedSet):
-        checkpoint("Extra: " & toStr(extra.a) & " -> " & toStr(extra.b) )
-
-    return actualSet == expectedSet
 
 
 suite "Delaunay triangulation should ":
