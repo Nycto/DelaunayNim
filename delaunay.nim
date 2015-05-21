@@ -166,10 +166,10 @@ proc calculate[T: Point]( points: PointList[T] ): EdgeGroup[T] =
         return newEdgeGroup[T]()
 
     of 2:
-        return newEdgeGroup[T]( points[0] -> points[1] )
+        return newEdgeGroup[T]( `[]`(points, 0) -> `[]`(points, 1) )
 
     of 3:
-        let tri = newTriangle(points[0], points[1], points[2])
+        let tri = newTriangle(`[]`(points, 0), `[]`(points, 1), `[]`(points, 2))
         let ab = tri.a -> tri.b
         let bc = tri.b -> tri.c
 
@@ -192,8 +192,7 @@ iterator triangulate*[T: Point]( rawPoints: openArray[T] ): tuple[a, b: T] =
     ## Iterates through the edges formed by running a delaunay triangulation
     ## on a set of points
     let points = newPointList(rawPoints)
-    let edges = calculate(points)
-    for edge in edges.edges:
+    for edge in edges( calculate(points) ):
         yield edge
 
 proc triangulate*[T: Point]( rawPoints: openArray[T] ): seq[tuple[a, b: T]] =
