@@ -23,7 +23,7 @@ test: $(TESTS)
 
 # Compiles a nim file
 define COMPILE
-nimble c \
+nimble c $(FLAGS) \
 		--path:. --nimcache:./build/nimcache \
 		--out:../build/$(notdir $(basename $1)) \
 		$1 \
@@ -69,6 +69,12 @@ watch:
 		inotifywait -qre close_write `find . -name "*.nim"` > /dev/null; \
 		echo "Change detected, re-running..."; \
 	done
+
+
+# Executes the compiler with profiling enabled
+.PHONY: profile
+profile:
+	make FLAGS="--profiler:on --stackTrace:on"
 
 
 # Remove all build artifacts

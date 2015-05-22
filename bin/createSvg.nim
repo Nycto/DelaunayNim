@@ -1,4 +1,5 @@
 import strutils, delaunay, optional_t
+import nimprof
 
 var points: seq[tuple[x, y: float]] = @[]
 
