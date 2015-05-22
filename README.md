@@ -6,6 +6,9 @@ This is accomplished using a divide and conquer algorithm, as described here:
 
 http://www.geom.uiuc.edu/~samuelp/del_project.html
 
+![Delaunay Triangulation](http://nycto.github.io/DelaunayNim/delaunay.svg)
+
+
 Quick Example
 -------------
 
