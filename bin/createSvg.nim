@@ -1,5 +1,7 @@
 import strutils, delaunay, optional_t
-import nimprof
+
+when defined(profiler) or defined(memProfiler):
+    import nimprof
 
 var points: seq[tuple[x, y: float]] = @[]
 
