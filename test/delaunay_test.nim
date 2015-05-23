@@ -1,4 +1,4 @@
-import unittest, helpers, sets
+import unittest, helpers, sets, sequtils
 import delaunay
 
 
@@ -7,11 +7,11 @@ suite "Delaunay triangulation should ":
 
     test "Return empty for empty input":
         let emptyPoints: seq[tuple[x, y: float]] = @[]
-        let edges = triangulate(emptyPoints)
+        let edges = toSeq(triangulate(emptyPoints))
         require( edges == emptyEdges )
 
     test "Return empty for a single point":
-        let edges = triangulate(@[ p(1, 1) ])
+        let edges = toSeq( triangulate(@[ p(1, 1) ]) )
         require( edges == emptyEdges )
 
     test "Return a single edge with two points":
@@ -28,17 +28,17 @@ suite "Delaunay triangulation should ":
     test "Return two edges for a line":
         block:
             let expected = edges( p(0, 0) -> p(2, 2), p(2, 2) -> p(4, 4) )
-            let triangulated = triangulate(@[ p(0, 0), p(2, 2), p(4, 4) ])
+            let triangulated = toSeq(triangulate(@[p(0, 0), p(2, 2), p(4, 4)]))
             require( expected == triangulated )
 
         block:
             let expected = edges( p(0, 0) -> p(2, 2), p(2, 2) -> p(4, 4) )
-            let triangulated = triangulate(@[ p(0, 0), p(4, 4), p(2, 2) ])
+            let triangulated = toSeq(triangulate(@[p(0, 0), p(4, 4), p(2, 2)]))
             require( expected == triangulated )
 
         block:
             let expected = edges( p(0, 0) -> p(2, 2), p(2, 2) -> p(4, 4)  )
-            let triangulated = triangulate(@[ p(4, 4), p(0, 0), p(2, 2) ])
+            let triangulated = toSeq(triangulate(@[p(4, 4), p(0, 0), p(2, 2) ]))
             require( expected == triangulated )
 
     test "Four points":
