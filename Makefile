@@ -24,13 +24,9 @@ test: $(TESTS)
 # Compiles a nim file
 define COMPILE
 nimble c $(FLAGS) \
-		--path:. --nimcache:./build/nimcache \
+		--path:. --nimcache:./build/nimcache --verbosity:0 \
 		--out:../build/$(notdir $(basename $1)) \
-		$1 \
-	| grep -v \
-		-e "^Hint: " \
-		-e "^CC: " \
-		-e "Hint: 'AbortOnError'"
+		$1
 endef
 
 
