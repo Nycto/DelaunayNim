@@ -17,11 +17,11 @@ import delaunay
 
 # Points can be any object with an `x` and `y` field
 let points: seq[tuple[x, y: float]] = @[
-    (x: 25,  y: 183),
-    (x: 189, y: 187),
-    (x: 34,  y: 169),
-    (x: 149, y: 136),
-    (x: 78,  y: 105),
+    (x: 25.0,  y: 183.0),
+    (x: 189.0, y: 187.0),
+    (x: 34.0,  y: 169.0),
+    (x: 149.0, y: 136.0),
+    (x: 78.0,  y: 105.0),
 ]
 
 for edge in triangulate(points):
