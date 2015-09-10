@@ -2,7 +2,7 @@
 # Runs a delaunay triangulation on a set of points
 #
 
-import optional_t
+import options
 import private/point
 import private/edge
 import private/anglesort
@@ -21,13 +21,13 @@ iterator pairIter[T](
         if first:
             first = false
         else:
-            let tup = (current: current, next: Some[T](next))
+            let tup = (current: current, next: some[T](next))
             yield tup
 
         current = next
 
     if not first:
-        let tup = (current: current, next: None[T]())
+        let tup = (current: current, next: none(T))
         yield tup
 
 
@@ -39,7 +39,7 @@ proc findCandidate[T: Point](
 
     for point, next in pairIter( points ):
         if next.isNone:
-            return Some[T](point)
+            return some[T](point)
 
         let triangle = newTriangle(anchor, reference, point)
 
@@ -47,9 +47,9 @@ proc findCandidate[T: Point](
         if triangle.isInCircumcircle(next.get):
             group.remove(anchor, point)
         else:
-            return Some(point)
+            return some(point)
 
-    return None[T]()
+    return none(T)
 
 
 proc mergeUsingBase[T: Point](

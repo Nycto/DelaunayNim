@@ -2,7 +2,7 @@
 # Edges
 #
 
-import point, tables, sets, optional_t, anglesort, sequtils
+import point, tables, sets, options, anglesort, sequtils
 
 type Edge*[T] = tuple[a, b: T] ## \
     ## Two connected points
@@ -44,8 +44,8 @@ proc newEdgeGroup*[T: Point]( edges: varargs[Edge[T]] ): EdgeGroup[T] =
     ## Creates a new, empty edge group
     result = EdgeGroup[T](
         connections: initTable[T, HashSet[T]](),
-        lowerLeft: None[T](),
-        lowerRight: None[T]()
+        lowerLeft: none(T),
+        lowerRight: none(T)
     )
 
     for edge in edges:
@@ -58,14 +58,14 @@ proc potentialBottom[T: Point]( group: var EdgeGroup[T], point: T ) =
     ## same level.
 
     if isNone(group.lowerLeft) or point.y < group.lowerLeft.get.y:
-        group.lowerLeft = Some(point)
-        group.lowerRight = Some(point)
+        group.lowerLeft = some(point)
+        group.lowerRight = some(point)
 
     elif point.y == group.lowerLeft.get.y:
         if point.x < group.lowerLeft.get.x:
-            group.lowerLeft = Some(point)
+            group.lowerLeft = some(point)
         if point.x > group.lowerRight.get.x:
-            group.lowerRight = Some(point)
+            group.lowerRight = some(point)
 
 proc connect[T: Point]( group: var EdgeGroup[T], base, other: T ) =
     ## Adds a point and its connection to his group
@@ -92,10 +92,10 @@ proc add*[T: Point] ( group: var EdgeGroup[T], other: EdgeGroup[T] ) =
         else:
             group.connections.add(point, edges)
 
-    if isSome(other.lowerLeft):
+    if other.lowerLeft.isSome:
         group.potentialBottom( other.lowerLeft.get )
 
-    if isSome(other.lowerRight):
+    if other.lowerRight.isSome:
         group.potentialBottom( other.lowerRight.get )
 
 

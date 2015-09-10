@@ -2,7 +2,7 @@
 # Sort points based on their angle from a line
 #
 
-import point, optional_t
+import point, options
 import algorithm, math, tables, sequtils
 
 type AngleCache = Table[tuple[x, y: float], float]
@@ -54,7 +54,7 @@ proc `==`*[T]( actual: AngleSorted[T], expected: openArray[T] ): bool =
 proc first*[T]( actual: AngleSorted[T] ): Option[T] =
     ## Returns the first item
     let asSeq = seq[T](actual)
-    return if asSeq.len == 0: None[T]() else: Some(asSeq[0])
+    return if asSeq.len == 0: none(T) else: some(asSeq[0])
 
 proc `$`*[T: Point]( points: AngleSorted[T] ): string =
     ## Convert to a string
