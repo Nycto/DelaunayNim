@@ -2,8 +2,8 @@
 # Sort points based on their angle from a line
 #
 
-import point, options
-import algorithm, math, tables, sequtils
+import private/point
+import options, algorithm, math, tables, sequtils
 
 type AngleCache = Table[tuple[x, y: float], float]
     ## Cache calculated angles

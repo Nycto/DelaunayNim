@@ -2,7 +2,7 @@
 # Triangle procs and objects
 #
 
-import point
+import private/point
 
 
 type Triangle*[T] = object

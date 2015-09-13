@@ -2,7 +2,8 @@
 # Edges
 #
 
-import point, tables, sets, options, anglesort, sequtils
+import private/anglesort, private/point
+import tables, sets, options, sequtils
 
 type Edge*[T] = tuple[a, b: T] ## \
     ## Two connected points
