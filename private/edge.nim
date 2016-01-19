@@ -72,7 +72,7 @@ proc connect[T: Point]( group: var EdgeGroup[T], base, other: T ) =
     ## Adds a point and its connection to his group
 
     if group.connections.hasKey(base):
-        group.connections.mget(base).incl(other)
+        group.connections[base].incl(other)
     else:
         group.connections.add(base, toSet([ other ]))
 
@@ -89,7 +89,7 @@ proc add*[T: Point] ( group: var EdgeGroup[T], other: EdgeGroup[T] ) =
     for point, edges in pairs( other.connections ):
         if group.connections.hasKey(point):
             for other in items( edges ):
-                group.connections.mget(point).incl(other)
+                group.connections[point].incl(other)
         else:
             group.connections.add(point, edges)
 
@@ -105,9 +105,9 @@ proc remove*[T: Point] ( group: var EdgeGroup[T], one, two: T ) =
     ## considered as part of this EdgeGroup when considering the bottom left
     ## and bottom right points
     if group.connections.hasKey(one):
-        group.connections.mget(one).excl(two)
+        group.connections[one].excl(two)
     if group.connections.hasKey(two):
-        group.connections.mget(two).excl(one)
+        group.connections[two].excl(one)
 
 proc bottomRight*[T: Point]( group: EdgeGroup[T] ): T =
     ## Returns the bottom right point in this edge group

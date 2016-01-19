@@ -13,7 +13,7 @@ proc angle[T: Point]( cache: var AngleCache, base: T, a: T, b: T ): float =
 
     let point = (x: b.x, y: b.y)
     if cache.hasKey(point):
-        return cache.mget(point)
+        return cache[point]
 
     let v1 = (x: a.x - base.x, y: a.y - base.y)
     let v2 = (x: b.x - base.x, y: b.y - base.y)
