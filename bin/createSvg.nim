@@ -17,7 +17,7 @@ for line in stdin.lines:
     let parts = line.split({' ', ','})
 
     if parts.len mod 2 != 0:
-        stderr.writeln "Line contains an odd number of inputs:\n" & line
+        stderr.writeLine "Line contains an odd number of inputs:\n" & line
         quit(QuitFailure)
 
     for i in countup(0, parts.len - 1, 2):
@@ -36,7 +36,7 @@ for line in stdin.lines:
                 minY = some(point.y)
 
         except ValueError:
-            stderr.writeln "Point can not be parsed as numbers:\n" & line
+            stderr.writeLine "Point can not be parsed as numbers:\n" & line
             quit(QuitFailure)
 
 
