@@ -2,7 +2,7 @@
 # Triangle procs and objects
 #
 
-import private/point
+import delaunay/private/point
 
 
 type Triangle*[T] = object

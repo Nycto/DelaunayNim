@@ -1,6 +1,6 @@
 import unittest, helpers
-import private/anglesort
-import private/point
+import delaunay/private/anglesort
+import delaunay/private/point
 import algorithm
 
 

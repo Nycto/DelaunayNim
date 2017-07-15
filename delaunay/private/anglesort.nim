@@ -2,7 +2,7 @@
 # Sort points based on their angle from a line
 #
 
-import private/point
+import delaunay/private/point
 import options, algorithm, math, tables, sequtils
 
 type AngleCache = Table[tuple[x, y: float], float]

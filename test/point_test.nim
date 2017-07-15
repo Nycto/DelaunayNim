@@ -1,5 +1,5 @@
 import unittest, helpers
-import private/point
+import delaunay/private/point
 
 suite "PointLists should ":
 

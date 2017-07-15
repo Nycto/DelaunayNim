@@ -4,14 +4,14 @@
 
 import sequtils, sets
 import delaunay
-import private/edge
-import private/point
+import delaunay/private/edge
+import delaunay/private/point
 
 proc p*( x, y: float ): tuple[x, y: float] =
     ## Creates a point
     result = (x, y)
 
-proc `->`*( a, b: tuple[x, y: float] ): tuple[a, b: tuple[x, y: float]] =
+proc `->`*( a, b: tuple[x, y: float] ): Edge[tuple[x, y: float]] =
     ## Creates an edge from two tuples
     result = (a: a, b: b)
 

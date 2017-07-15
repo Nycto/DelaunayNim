@@ -2,7 +2,7 @@
 # Edges
 #
 
-import private/anglesort, private/point
+import delaunay/private/anglesort, delaunay/private/point
 import tables, sets, options, sequtils
 
 type Edge*[T] = tuple[a, b: T] ## \

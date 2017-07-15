@@ -1,6 +1,6 @@
 import unittest, helpers
-import private/triangle
-import private/point
+import delaunay/private/triangle
+import delaunay/private/point
 
 suite "Triangles should ":
 

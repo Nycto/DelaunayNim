@@ -1,7 +1,7 @@
 import unittest, sequtils, algorithm, helpers
-import private/edge
-import private/point
-import private/anglesort
+import delaunay/private/edge
+import delaunay/private/point
+import delaunay/private/anglesort
 
 proc `==`[T]( actual: EdgeGroup[T], expected: seq[Edge[T]] ): bool =
     var edges = toSeq(actual.edges)

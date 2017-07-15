@@ -1,9 +1,13 @@
-[Package]
-name          = "delaunay"
-version       = "0.2.0"
+# Package
+
+version       = "0.3.0"
 author        = "Nycto"
 description   = "Delaunay triangulator"
 license       = "MIT"
+skipDirs      = @["test", ".build", "bin"]
 
-[Deps]
-Requires: "nim >= 0.11.2"
+# Deps
+requires "nim >= 0.17.0"
+
+exec "test -d .build/ExtraNimble || git clone https://github.com/Nycto/ExtraNimble.git .build/ExtraNimble"
+include ".build/ExtraNimble/extranimble.nim"

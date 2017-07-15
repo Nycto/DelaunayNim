@@ -3,10 +3,10 @@
 #
 
 import options
-import private/point
-import private/edge
-import private/anglesort
-import private/triangle
+import delaunay/private/point
+import delaunay/private/edge
+import delaunay/private/anglesort
+import delaunay/private/triangle
 
 
 iterator pairIter[T](
