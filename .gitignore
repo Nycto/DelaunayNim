@@ -1,2 +1,12 @@
-.build
-profile_results.txt
+# Ignore all
+*
+
+# Unignore all with extensions
+!*.*
+
+# Unignore all dirs
+!*/
+
+build
+.DS_Store
+*.svg

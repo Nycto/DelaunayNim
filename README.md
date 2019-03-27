@@ -47,7 +47,14 @@ A full example can be found here:
 https://github.com/Nycto/DelaunayNim/blob/master/bin/createSvg.nim
 
 That little binary accepts a list of points and outputs an SVG of the
-triangulated grid.
+triangulated grid. You can use it like this:
+
+```
+seq 100 \
+    | awk 'BEGIN { srand(); } { print int(rand() * 500) " " int(rand() * 500) }' \
+    | ./bin/createSvg \
+    > example.svg
+```
 
 License
 -------
