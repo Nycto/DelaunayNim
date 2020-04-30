@@ -74,7 +74,7 @@ proc connect[T: Point]( group: var EdgeGroup[T], base, other: T ) =
     if group.connections.hasKey(base):
         group.connections[base].incl(other)
     else:
-        group.connections.add(base, toSet([ other ]))
+        group.connections.add(base, toHashSet([ other ]))
 
 
 proc add*[T: Point] ( group: var EdgeGroup[T], one, two: T ) =
@@ -124,7 +124,7 @@ proc bottomLeft*[T: Point]( group: EdgeGroup[T] ): T =
 iterator edges*[T: Point]( group: EdgeGroup[T] ): Edge[T] =
     ## Iterates over all the edges in a group
 
-    var seen = initSet[T]()
+    var seen = initHashSet[T]()
     for key in group.connections.keys:
         seen.incl(key)
         for point in `[]`(group.connections, key).items:
