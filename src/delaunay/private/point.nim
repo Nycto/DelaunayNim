@@ -58,7 +58,7 @@ proc newPointList*[T: Point]( list: openArray[T] ): PointList[T] =
     setlen(output, list.len)
 
     # Keep track of the points that have been seen
-    var seen = initSet[tuple[x, y: float]]()
+    var seen = initHashSet[tuple[x, y: float]]()
 
     # Dedupe, which also copies the input
     for point in items(list):

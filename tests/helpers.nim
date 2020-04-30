@@ -61,8 +61,8 @@ proc triangulate*( expected: EdgeList ): EdgeList =
 
 template `==`*( expected, actual: EdgeList ): bool =
     ## Compare two edge lists
-    var expectedSet = toSet(expected)
-    var actualSet = toSet(actual)
+    var expectedSet = toHashSet(expected)
+    var actualSet = toHashSet(actual)
 
     for point in difference(expectedSet, actualSet):
         checkpoint("Missing: " & toStr(point.a) & " -> " & toStr(point.b))
