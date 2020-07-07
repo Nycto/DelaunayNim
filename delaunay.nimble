@@ -8,5 +8,5 @@ srcDir        = "src"
 skipDirs      = @[ "bin" ]
 
 # Deps
-requires "nim >= 0.17.0"
+requires "nim >= 1.2.0"
 
