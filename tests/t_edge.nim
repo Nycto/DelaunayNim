@@ -77,7 +77,7 @@ suite "Edge Groups should ":
 
         let connections = group.connected( p(1, 1) )
 
-        require( connections == @[ p(4, 5), p(2, 2) ] )
+        require( connections == @[ p(2, 2),  p(4, 5) ] )
 
     test "Add edge groups together":
 
