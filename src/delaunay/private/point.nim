@@ -72,7 +72,8 @@ proc newPointList*[T: Point]( list: openArray[T] ): PointList[T] =
             seen.incl(pair)
 
     setlen(output, seen.len)
-    shallow(output)
+    when defined(gcArc) or defined(gcOrc):
+        shallow(output)
 
     # Sort points left to right, bottom to top
     output.sort(`<=>`)
