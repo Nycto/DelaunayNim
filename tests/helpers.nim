@@ -13,7 +13,7 @@ proc p*( x, y: float ): tuple[x, y: float] =
 
 proc `->`*( a, b: tuple[x, y: float] ): Edge[tuple[x, y: float]] =
     ## Creates an edge from two tuples
-    result = (a: a, b: b)
+    result = edge.`->`(a, b)
 
 proc `==`*[T]( actual: seq[T], expected: openArray[T] ): bool =
     ## Allows you to compare a sequence to an array
