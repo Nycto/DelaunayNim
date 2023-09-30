@@ -1,5 +1,8 @@
-DelaunayNim [![Build Status](https://travis-ci.org/Nycto/DelaunayNim.svg?branch=master)](https://travis-ci.org/Nycto/DelaunayNim)
+DelaunayNim
 ===========
+
+[![Build](https://github.com/Nycto/DelaunayNim/actions/workflows/build.yml/badge.svg)](https://github.com/Nycto/DelaunayNim/actions/workflows/build.yml)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](https://github.com/Nycto/DelaunayNim/blob/main/LICENSE.md)
 
 A Nim library for calculating the Delaunay Triangulation of a set of points.
 This is accomplished using a divide and conquer algorithm, as described here:
@@ -62,4 +65,3 @@ License
 This library is released under the MIT License, which is pretty spiffy. You
 should have received a copy of the MIT License along with this program. If
 not, see http://www.opensource.org/licenses/mit-license.php
-
